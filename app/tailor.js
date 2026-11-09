@@ -3,26 +3,30 @@
 (function(root){
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-  function trackKey(job){
-    const t = `${job.track||""} ${job.title||""}`.toLowerCase();
-    if (/front|engineer|developer|web dev/.test(t) && !/product design|ux design/.test(t)) return "frontend";
-    if (/creative tech|experience|immersive|prototyp|museum|installation|motion|interactive/.test(t)) return "creative";
-    if (/visual|graphic|brand|content design|marketing/.test(t)) return "visual";
-    return "product";
+  // The job's role key (e.g. "product", "backend", "analytics"): the track named in profile/settings.json → search.tracks,
+  // else the first track whose title pattern matches, else the first role key in resume.json.
+  function tracks(){ return ((root.SETTINGS || {}).search || {}).tracks || []; }
+  function trackKey(job, R){
+    const T = tracks(), title = String(job.title||"").toLowerCase();
+    const byName = T.find(t => t.name === job.track);
+    if (byName && byName.key) return byName.key;
+    for (const t of T){ try { if (t.key && new RegExp(t.titles, "i").test(title)) return t.key; } catch(e){} }
+    return Object.keys((R && R.skills) || {})[0] || "general";
   }
+  function trackLabel(key){ const t = tracks().find(x => x.key === key); return t ? t.name : key; }
   function jobText(job){
     return [job.title, job.company, job.track, job.why, job.lead, job.note, ...Object.values(job.details||{})].join(" ").toLowerCase();
   }
 
   function plan(R, job, saved){
-    const key = trackKey(job), text = jobText(job), reasons = [];
-    const label = {product:"product / UI-UX design", frontend:"frontend / design engineering", creative:"creative technology / experience", visual:"visual / brand design"}[key];
+    const key = trackKey(job, R), text = jobText(job), reasons = [];
+    const label = trackLabel(key);
     reasons.push(`Tailored for a ${label} role.`);
 
     // Projects: track weight + keyword overlap with the posting; one version per project group only.
     const scored = R.projects.map(p => {
       const hits = (p.keywords||[]).filter(k => new RegExp(`(^|[^a-z0-9])${k.replace(/[.*+?^${}()|[\]\\#]/g, "\\$&")}($|[^a-z0-9])`).test(text));
-      return {p, hits, score: (p.tracks[key]||0) * 2 + hits.length * 1.5};
+      return {p, hits, score: ((p.tracks||{})[key]||0) * 2 + hits.length * 1.5};
     }).sort((a,b) => b.score - a.score);
     let projects = [], groups = new Set();
     for (const s of scored){
@@ -33,9 +37,10 @@
     }
 
     // Experience: keep the strongest for this track, max 5, in the original (reverse-chronological) order.
-    const expScore = e => (e.tracks[key]||0) + (e.bullets.join(" ").toLowerCase().split(/\W+/).filter(w => w.length > 4 && text.includes(w)).length > 2 ? 1 : 0);
+    const expScore = e => ((e.tracks||{})[key]||0) + (e.bullets.join(" ").toLowerCase().split(/\W+/).filter(w => w.length > 4 && text.includes(w)).length > 2 ? 1 : 0);
     const keepIds = new Set(R.experience.map(e => ({e, s: expScore(e)})).sort((a,b)=>b.s-a.s).slice(0,5).filter(x=>x.s>0).map(x=>x.e.id));
-    let experience = R.experience.filter(e => keepIds.has(e.id));
+    // No line is tagged for this role yet (e.g. a new track): keep the most recent five rather than an empty section.
+    let experience = keepIds.size ? R.experience.filter(e => keepIds.has(e.id)) : R.experience.slice(0, 5);
 
     if (saved){
       projects = R.projects.filter(p => saved.projects.includes(p.id));
@@ -44,8 +49,8 @@
     }
 
     // Skills: the track's list, with anything the posting names moved to the front.
-    const skills = [...R.skills[key]].sort((a,b) => (text.includes(b.toLowerCase().split(" ")[0]) ? 1 : 0) - (text.includes(a.toLowerCase().split(" ")[0]) ? 1 : 0));
-    const eduLines = R.education.lines.filter(l => l.tracks.includes("*") || l.tracks.includes(key));
+    const skills = [...(R.skills[key] || Object.values(R.skills)[0] || [])].sort((a,b) => (text.includes(b.toLowerCase().split(" ")[0]) ? 1 : 0) - (text.includes(a.toLowerCase().split(" ")[0]) ? 1 : 0));
+    const eduLines = R.education.lines.filter(l => !l.tracks || l.tracks.includes("*") || l.tracks.includes(key));
     // Keep it to one page: trim long bullet lists when there are many entries.
     const maxBullets = experience.length >= 5 ? 3 : 4;
     reasons.push(`${experience.length} experiences, ${projects.length} projects. Skills ordered for ${label}.`);

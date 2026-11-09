@@ -74,13 +74,14 @@ if (params.get("embed")) document.body.classList.add("embed");
 let R, JOB, STATE, plan;
 
 (async function(){
+  window.SETTINGS = await fetch("/profile/settings.json").then(x=>x.json()).catch(()=>({}));
   const [r, jobs, st] = await Promise.all([
     fetch("/profile/resume.json").then(x=>x.json()),
     fetch("/api/jobs").then(x=>x.json()).catch(()=>({jobs:[]})),
     fetch("/api/state").then(x=>x.json()).catch(()=>({jobs:{}, added:[]}))
   ]);
   R = r; STATE = st;
-  JOB = [...(st.added||[]), ...jobs.jobs].find(j => j.id === jobId) || {title:"General", track:"Product / UI-UX design"};
+  JOB = [...(st.added||[]), ...jobs.jobs].find(j => j.id === jobId) || {title:"General", track:(((SETTINGS.search||{}).tracks||[])[0]||{}).name||""};
   draw();
 })();
 

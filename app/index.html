@@ -187,12 +187,7 @@ footer{font-size:13px;color:var(--muted)}
         <button class="chip" data-v="verified" aria-pressed="false">Verified only</button>
         <button class="chip" data-v="all" aria-pressed="false">Everything</button>
       </div></div>
-      <div><h3>Role</h3><div class="chips multi" data-key="track">
-        <button class="chip" data-v="Product / UI-UX design" aria-pressed="true">Product / UI-UX</button>
-        <button class="chip" data-v="Frontend / design engineer" aria-pressed="true">Frontend / design eng</button>
-        <button class="chip" data-v="Creative technology" aria-pressed="true">Creative tech</button>
-        <button class="chip" data-v="Visual / brand design" aria-pressed="false">Visual / brand</button>
-      </div></div>
+      <div><h3>Role</h3><div class="chips multi" data-key="track" id="trackChips"></div></div>
       <div><h3>Type</h3><div class="chips multi" data-key="type">
         <button class="chip" data-v="Full-time" aria-pressed="true">Full-time</button>
         <button class="chip" data-v="Co-op / apprenticeship" aria-pressed="true">Co-op / apprentice</button>
@@ -201,18 +196,14 @@ footer{font-size:13px;color:var(--muted)}
       <div><h3>When</h3><div class="chips multi" data-key="season">
         <button class="chip" data-v="ft" aria-pressed="true">Full-time</button>
         <button class="chip" data-v="summer" aria-pressed="true">Summer / undated</button>
-        <button class="chip" data-v="semester" aria-pressed="true">Winter · Spring · Fall (CPT)</button>
+        <button class="chip" data-v="semester" aria-pressed="true" id="semChip">Winter · Spring · Fall</button>
       </div></div>
-      <div><h3>Where</h3><div class="chips multi" data-key="where">
-        <button class="chip" data-v="NYC" aria-pressed="true">NYC</button>
-        <button class="chip" data-v="Remote (US)" aria-pressed="true">Remote</button>
-        <button class="chip" data-v="US" aria-pressed="true">Rest of US</button>
-      </div></div>
-      <div><h3>Visa</h3>
+      <div><h3>Where</h3><div class="chips multi" data-key="where" id="whereChips"></div></div>
+      <div id="visaBox"><h3>Visa</h3>
         <select class="sel" id="visa">
-          <option value="any">Any: OPT is fine</option>
+          <option value="any">Any</option>
           <option value="h1b">Has filed H-1B before</option>
-          <option value="design">Has filed H-1B for designers</option>
+          <option value="role">Has filed H-1B for this role</option>
         </select>
       </div>
       <div><h3>Fit</h3><div class="row"><input type="range" id="minfit" min="1" max="10" value="6"><span id="minfitv">6+</span></div></div>
@@ -264,8 +255,8 @@ footer{font-size:13px;color:var(--muted)}
     <label>Job link<input name="url" type="url" required placeholder="https://…"></label>
     <label>Title<input name="title" required></label>
     <label>Company<input name="company" required></label>
-    <label>Location<input name="location" placeholder="New York, NY"></label>
-    <label>Role<select name="track"><option>Product / UI-UX design</option><option>Frontend / design engineer</option><option>Creative technology</option><option>Visual / brand design</option></select></label>
+    <label>Location<input name="location" placeholder="City, or Remote"></label>
+    <label>Role<select name="track" id="addTrack"></select></label>
     <label>Type<select name="type"><option>Full-time</option><option>Internship</option><option>Co-op / apprenticeship</option></select></label>
     <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn primary" value="ok">Save to pipeline</button></div>
   </form>
@@ -278,9 +269,31 @@ const STAGES = [
 ];
 const LABEL = {...Object.fromEntries(STAGES), dismissed:"Not for me"};
 let INBOX = {}, appliedView = "all", FIT = {};
-let LEAD = {}, SWAP = {}, SETTINGS = {};  // from profile/settings.json
-const DEFAULTS = {hideAiNo:true, season:["ft","summer","semester"], show:"new", track:["Product / UI-UX design","Frontend / design engineer","Creative technology"], type:["Full-time","Co-op / apprenticeship","Internship"], where:["NYC","Remote (US)","US"], visa:"any", minfit:6, age:30, q:"", sort:"fit"};
+let LEAD = {}, SWAP = {}, SETTINGS = {}, SEARCH = {}, TRACKS = [], HOME = {}, HOME_RE = null;  // from profile/settings.json
+const DEFAULTS = {hideAiNo:true, season:["ft","summer","semester"], show:"new", track:[], type:["Full-time","Co-op / apprenticeship","Internship"], where:["home","Remote","Elsewhere"], visa:"any", minfit:6, age:30, q:"", sort:"fit"};
 let F = load("hawkFilters", DEFAULTS);
+const WHERE_OLD = {"Remote (US)":"Remote", "US":"Elsewhere", "NYC":"home"};
+const whereKey = j => j.home || j.nyc ? "home" : (WHERE_OLD[j.where] || j.where);
+const needsVisa = () => !!SEARCH.needs_sponsorship, studentVisa = () => !!(SEARCH.needs_sponsorship && SEARCH.student_visa);
+const roleWord = () => SEARCH.role_word || "this role";
+// Build the filters that depend on profile/settings.json → "search": roles, places, visa.
+function applySettings(){
+  SEARCH = SETTINGS.search || {}; TRACKS = SEARCH.tracks || []; HOME = SEARCH.home || {};
+  try { HOME_RE = HOME.pattern ? new RegExp(HOME.pattern, "i") : null; } catch(e){ HOME_RE = null; }
+  DEFAULTS.track = TRACKS.filter(t => t.on !== false).map(t => t.name);
+  F.track = (F.track||[]).filter(n => TRACKS.some(t => t.name === n)); if (!F.track.length) F.track = [...DEFAULTS.track];
+  F.where = [...new Set((F.where||DEFAULTS.where).map(w => WHERE_OLD[w] || w))];
+  if (F.visa === "design") F.visa = "role";
+  $("#trackChips").innerHTML = TRACKS.map(t => `<button class="chip" data-v="${esc(t.name)}" aria-pressed="${F.track.includes(t.name)}">${esc(t.short || t.name)}</button>`).join("");
+  $("#addTrack").innerHTML = TRACKS.map(t => `<option>${esc(t.name)}</option>`).join("");
+  const country = (SEARCH.country || "US").toUpperCase();
+  $("#whereChips").innerHTML = [HOME.label && ["home", HOME.label], SEARCH.remote !== false && ["Remote","Remote"], ["Elsewhere", country === "ANY" ? "Anywhere else" : `Rest of ${country}`]]
+    .filter(Boolean).map(([v,l]) => `<button class="chip" data-v="${v}" aria-pressed="${F.where.includes(v)}">${esc(l)}</button>`).join("");
+  $("#visaBox").hidden = !needsVisa();
+  $("#visa").options[0].textContent = studentVisa() ? "Any: OPT is fine" : "Any";
+  $("#visa").options[2].textContent = `Has filed H-1B for ${SEARCH.role_word ? SEARCH.role_word + "s" : "this role"}`;
+  $("#semChip").textContent = studentVisa() ? "Winter · Spring · Fall (CPT)" : "Winter · Spring · Fall";
+}
 let JOBS = [], META = {}, STATE = {jobs:{}, added:[]}, SERVER = true, LIMIT = 60, view = "discover", openId = null;
 
 const $ = s => document.querySelector(s);
@@ -294,6 +307,7 @@ function ago(d){ const n=daysAgo(d); if(n===null) return "date not shown"; retur
 async function boot(){
   try { SETTINGS = await fetch("/profile/settings.json").then(r=>r.json()); LEAD = SETTINGS.lead_with || {}; SWAP = SETTINGS.swaps || {};
     document.title = $("#apptitle").textContent = SETTINGS.app_title || "Open Job Search Agent"; } catch(e){}
+  applySettings();
   try {
     const [j, s] = await Promise.all([fetch("/api/jobs").then(r=>r.json()), fetch("/api/state").then(r=>r.json())]);
     META = j; JOBS = j.jobs; STATE = {jobs:{}, added:[], ...s};
@@ -316,7 +330,7 @@ async function boot(){
   if (INBOX.connected && (!INBOX.scannedAt || Date.now() - new Date(INBOX.scannedAt) > 6*36e5)) setTimeout(() => scanMail(true), 1500);
   if (SERVER) { try { CONNS = (await fetch("/api/connections").then(r=>r.json())).connections || []; } catch(e){} }
   $("#sub").textContent = META.fetched_at ? `Updated ${new Date(META.fetched_at).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})} · ${(META.database_rows||0).toLocaleString()} postings searched` : "No job data yet: press Refresh";
-  $("#foot").innerHTML = `Software engineering roles are left out. Jobs come from <a href="https://huggingface.co/datasets/feder-cr/jobs" target="_blank" rel="noopener">AIHawk's open job database</a> (37 public sources, rebuilt every 5 hours) plus postings the scout verified on employers' own pages. Fit scores for unverified jobs are rough: they use the title, location and H-1B filing history only. H-1B counts are DOL Labor Condition Applications from h1bdata.info. They show an employer has filed before, not that a posting sponsors.`;
+  $("#foot").innerHTML = `Jobs come from <a href="https://huggingface.co/datasets/feder-cr/jobs" target="_blank" rel="noopener">AIHawk's open job database</a> (37 public sources, rebuilt every 5 hours) plus postings the scout verified on employers' own pages. Fit scores for unverified jobs are rough: they use the title, location${needsVisa() ? " and H-1B filing history" : ""} only.${needsVisa() ? " H-1B counts are DOL Labor Condition Applications from h1bdata.info. They show an employer has filed before, not that a posting sponsors." : ""} Roles, places and rules come from <code>profile/settings.json</code>.`;
   bindFilters(); render();
 }
 
@@ -356,18 +370,19 @@ function moveBack(id){
 const backLabel = v => { const to = prevStatus(v); return `↩ Back to ${to ? LABEL[to] : "Discover"}`; };
 
 function visaLevel(j){
-  // "design" = has filed H-1Bs for designers · "filer" = has filed H-1Bs · "opt" = posting says no H-1B · "unknown"
+  // "role" = has filed H-1Bs for this kind of role · "filer" = has filed H-1Bs · "opt" = posting says no H-1B · "unknown"
+  if (!needsVisa()) return "n/a";
   if (/not (be able to|support).{0,200}H-1B|no H-1B|does not sponsor|OPT only/i.test(String(j.sponsorshipText||"") + " " + (j.note||""))) return "opt";
   const h = String(j.h1b||"").replace(/,/g,"");
-  const design = /(\d+)\s+designer/i.exec(h), any = /(\d+)\s+(?:total |software engineer )?LCAs?/i.exec(h) || /(\d+)\s+software/i.exec(h);
-  if (design && +design[1] > 0) return "design";
+  const role = /(\d+)\s+(?!total\b)[a-z][\w-]*\s+LCAs/i.exec(h), any = /(\d+)\s+(?:[\w-]+\s+)?LCAs?/i.exec(h);
+  if (role && +role[1] > 0) return "role";
   if ((any && +any[1] > 0) || /cap-exempt/i.test(h)) return "filer";
   return "unknown";
 }
 function visaOk(j){
-  if (F.visa === "any") return true;
+  if (F.visa === "any" || !needsVisa()) return true;
   const v = visaLevel(j);
-  return F.visa === "design" ? v === "design" : (v === "design" || v === "filer");
+  return F.visa === "role" ? v === "role" : (v === "role" || v === "filer");
 }
 function filtered(){
   const q = F.q.trim().toLowerCase();
@@ -377,9 +392,9 @@ function filtered(){
     if (F.show === "verified" && !j.verified) return false;
     if (!j.verified && !F.track.includes(j.track)) return false;
     if (!F.type.includes(j.type)) return false;
-    const sea = j.type === "Full-time" ? "ft" : /CPT/.test(j.season||"") ? "semester" : "summer";
+    const sea = j.type === "Full-time" ? "ft" : /CPT|school year/.test(j.season||"") ? "semester" : "summer";
     if (!(F.season||DEFAULTS.season).includes(sea)) return false;
-    if (!F.where.includes(j.where)) return false;
+    if (!F.where.includes(whereKey(j))) return false;
     if ((j.fit||0) < F.minfit) return false;
     if (!visaOk(j)) return false;
     if (F.hideAiNo && FIT[j.id] && FIT[j.id].score <= 2) return false;
@@ -404,10 +419,10 @@ function tags(j){
   if (j.added) t.push(["Added by you","ghost"]);
   if (j.salary) t.push([j.salary,""]);
   const v = visaLevel(j);
-  if (v === "opt") t.push(["OPT only","warn"]);
-  else if (v === "design") t.push(["H-1B: designers","ok"]);
+  if (v === "opt") t.push([studentVisa() ? "OPT only" : "No sponsorship","warn"]);
+  else if (v === "role") t.push([`H-1B: ${SEARCH.role_word ? SEARCH.role_word + "s" : "this role"}`,"ok"]);
   else if (v === "filer") t.push(["H-1B filer","ok"]);
-  else t.push(["OPT ok · H-1B unknown","ghost"]);
+  else if (v === "unknown") t.push([studentVisa() ? "OPT ok · H-1B unknown" : "H-1B unknown","ghost"]);
   if (/CPT/.test(j.season||"")) t.push([j.season.replace(" (during school: needs CPT)"," · needs CPT"),"warn"]);
   if (j.linkSource === "board") t.push(["Job-board link: find it on the company site","warn"]);
   const ps = st(j.id).posting; if (ps === "closed") t.push(["Posting closed","bad"]);
@@ -442,7 +457,8 @@ function render(){
   $("#stats").innerHTML = [
     [JOBS.filter(j=>j.verified).length, "verified by the scout"],
     [fresh, "strong matches, last 3 days"],
-    [JOBS.filter(j=>j.nyc && (j.fit||0)>=7).length, "strong matches in NYC"],
+    HOME.label ? [JOBS.filter(j=>whereKey(j)==="home" && (j.fit||0)>=7).length, `strong matches in ${esc(HOME.label)}`]
+               : [JOBS.filter(j=>whereKey(j)==="Remote" && (j.fit||0)>=7).length, "strong remote matches"],
     [counts.applied, "applied, waiting"], [counts.interview + counts.offer, "interviewing / offer"], [counts.rejected, "rejected"]
   ].map(([n,l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
   renderBoard(); renderApplied();
@@ -468,10 +484,9 @@ function openDetail(id){
   $("#dtitle").textContent = j.title;
   $("#dmeta").textContent = `${j.company} · ${j.location}`;
   const fb = j.fitBreakdown || {};
-  const MAX = {track:3,path:2,location:2,sponsorship:2,level:1}, NAMES={track:"Role",path:"Path to FT",location:"Location",sponsorship:"H-1B",level:"Level"};
-  const bars = Object.keys(MAX).filter(k=>k in fb).map(k => `<div class="bar"><span>${NAMES[k]}</span><i style="--w:${100*fb[k]/MAX[k]}%"></i><span>${fb[k]}/${MAX[k]}</span></div>`).join("");
-  const details = j.details ? Object.entries(j.details) : [["Type", j.type],["Role", j.track],["Posted", j.posted ? `${j.posted} (${ago(j.posted)})` : "Not shown"],["Pay", j.salary || "Not listed"],["H-1B history", j.h1b || "Unknown"],["Source", j.ats || "—"]];
-  const resume = j.resume || "digital-design.pdf";
+  const MAX = {track:Math.max(3, ...TRACKS.map(t=>t.points||1)),path:2,location:2,sponsorship:2,level:1}, NAMES={track:"Role",path:"Path to FT",location:"Location",sponsorship:"H-1B",level:"Level"};
+  const bars = Object.keys(MAX).filter(k=>k in fb && (k !== "sponsorship" || needsVisa())).map(k => `<div class="bar"><span>${NAMES[k]}</span><i style="--w:${100*fb[k]/MAX[k]}%"></i><span>${fb[k]}/${MAX[k]}</span></div>`).join("");
+  const details = j.details ? Object.entries(j.details) : [["Type", j.type],["Role", j.track],["Posted", j.posted ? `${j.posted} (${ago(j.posted)})` : "Not shown"],["Pay", j.salary || "Not listed"], ...(needsVisa() ? [["H-1B history", j.h1b || "Unknown"]] : []),["Source", j.ats || "—"]];
   $("#dbody").innerHTML = `
     ${s.status ? `<div><button class="btn" data-back="${esc(id)}">${esc(backLabel(s))}</button> <span class="meta">or pick any stage:</span></div>` : ""}
     <div class="statusrow">${[...STAGES,["dismissed","✕ Not for me"]].map(([k,l]) => `<button class="chip" data-act="${k}" aria-pressed="${s.status===k}">${l}</button>`).join("")}</div>
@@ -483,7 +498,7 @@ function openDetail(id){
     ${s.status === "closed" ? `<label class="box"><b class="lbl">Why closed</b><select class="sel" id="closedWhy">${["","Posting closed before I applied","Applied, then the posting closed","Withdrew","No response (gave up)","Decided not to apply"].map(r=>`<option ${s.closedWhy===r?"selected":""}>${r}</option>`).join("")}</select><span class="meta">Got a "no"? Use <b>Rejected</b> instead, so it's counted separately.</span></label>` : ""}
     ${s.statusFrom === "email" && s.lastEmail ? `<div class="box"><b class="lbl">Updated from your email</b>Moved to <b>${esc(LABEL[s.status]||s.status)}</b> because of “${esc(s.lastEmail.subject)}” (${esc(s.lastEmail.date)}). ${s.lastEmail.link?`<a href="${esc(s.lastEmail.link)}" target="_blank" rel="noopener">Open in Gmail ↗</a>`:""} Wrong? Click the right stage above.</div>` : ""}
     ${(INBOX.byJob||{})[id]?.length ? `<div class="box"><b class="lbl">Emails about this job</b><div class="mail">${INBOX.byJob[id].slice().reverse().map(mailHtml).join("")}</div></div>` : ""}
-    ${j.verified ? "" : `<div class="box"><b class="lbl">Not verified yet</b>Seen in the job database, not yet opened on the employer's page. Check the graduation window, the sponsorship line and whether it's still open before you apply.</div>`}
+    ${j.verified ? "" : `<div class="box"><b class="lbl">Not verified yet</b>Seen in the job database, not yet opened on the employer's page. Check the requirements${needsVisa() ? ", the sponsorship line" : ""} and whether it's still open before you apply.</div>`}
     ${s.proof ? `<div class="box"><b class="lbl">Applied${s.appliedVia ? " with the " + esc(s.appliedVia) : ""}</b>The site confirmed it. <a href="/${esc(s.proof)}" target="_blank">📸 See the confirmation screenshot ↗</a></div>` : ""}
     <div class="box" id="aiBox">${aiBoxHtml(j)}</div>
     ${j.why ? `<div class="box"><b class="lbl">Why it fits</b>${esc(j.why)}</div>` : ""}
@@ -504,7 +519,7 @@ function openDetail(id){
 }
 function aiBoxHtml(j){
   const f = FIT[j.id];
-  if (!f) return `<b class="lbl">AI fit check</b>Claude reads the real job description against your profile and scores it 1–5, with red flags like citizenship, graduation date or "really a software role". <div style="margin-top:6px"><button class="btn" data-aicheck="${esc(j.id)}" ${SERVER?"":"disabled"}>✦ Check fit with AI</button></div>`;
+  if (!f) return `<b class="lbl">AI fit check</b>Claude reads the real job description against your profile and scores it 1–5, with red flags like citizenship, graduation date or "not really the role you want". <div style="margin-top:6px"><button class="btn" data-aicheck="${esc(j.id)}" ${SERVER?"":"disabled"}>✦ Check fit with AI</button></div>`;
   return `<b class="lbl">AI fit check · ${f.score}/5 · ${esc(f.checked||"")}</b><b>${esc(f.verdict||"")}</b>. ${esc(f.why||"")}
     ${(f.flags||[]).length ? `<div class="tags" style="margin-top:6px">${f.flags.map(x=>`<span class="pill warn">${esc(x)}</span>`).join("")}</div>` : ""}
     ${f.grad ? `<div class="meta">Graduation asked: ${esc(f.grad)}</div>` : ""}${f.sponsorship ? `<div class="meta">Visa line: ${esc(f.sponsorship)}</div>` : ""}
@@ -542,7 +557,7 @@ function peopleHtml(j){
     : (CONNS.length ? `<div class="meta">None of your LinkedIn connections list ${esc(j.company)} as their company.</div>` : `<div class="meta">To see your own connections here, export them from LinkedIn (Settings → Data privacy → Get a copy of your data → Connections) and save the file as <code>data/linkedin/Connections.csv</code>.</div>`);
   return list + `<div style="margin-top:6px">Search on LinkedIn (opens in your logged-in browser):
     ${(SETTINGS.alumni_searches||[]).map(a => `<a href="https://www.linkedin.com/school/${encodeURIComponent(a.linkedin_school)}/people/?keywords=${co}" target="_blank" rel="noopener">${esc(a.label)} at ${esc(j.company)} ↗</a>`).join("")}
-    <a href="https://www.linkedin.com/search/results/people/?keywords=${co}%20designer&network=%5B%22F%22%2C%22S%22%5D" target="_blank" rel="noopener">1st &amp; 2nd-degree designers at ${esc(j.company)} ↗</a>
+    <a href="https://www.linkedin.com/search/results/people/?keywords=${co}${SEARCH.role_word ? "%20" + encodeURIComponent(SEARCH.role_word) : ""}&network=%5B%22F%22%2C%22S%22%5D" target="_blank" rel="noopener">1st &amp; 2nd-degree ${esc(SEARCH.role_word ? SEARCH.role_word + "s" : "people")} at ${esc(j.company)} ↗</a>
     ${SETTINGS.community_search ? `<a href="https://www.linkedin.com/search/results/people/?keywords=${co}%20${encodeURIComponent(SETTINGS.community_search.keyword)}" target="_blank" rel="noopener">${esc(SETTINGS.community_search.label)} at ${esc(j.company)} ↗</a>` : ""}</div>`;
 }
 document.addEventListener("click", async e => {
@@ -562,7 +577,7 @@ document.addEventListener("change", e => {
 });
 const GROUPS = [
   {k:"offer", label:"Offer 🎉", sub:"They want you!", test:v=>v.status==="offer"},
-  {k:"interview", label:"Interviewing", sub:"You got a reply asking to talk, schedule, or do a design exercise.", test:v=>v.status==="interview"},
+  {k:"interview", label:"Interviewing", sub:"You got a reply asking to talk, schedule, or do an exercise.", test:v=>v.status==="interview"},
   {k:"applied", label:"Applied · waiting to hear back", sub:"No decision yet.", test:v=>v.status==="applied"},
   {k:"rejected", label:"Rejected", sub:"They said no. Their loss.", test:v=>v.status==="rejected"},
   {k:"closed", label:"Closed", sub:"Posting came down, you withdrew, or you decided not to apply.", test:v=>v.status==="closed" || (v.status==="dismissed" && v.appliedOn)}
@@ -653,9 +668,9 @@ document.addEventListener("click", async e => {
   if (ign){ await fetch("/api/inbox/dismiss",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:ign})}); await loadInbox(); return renderApplied(); }
   if (add){
     const m = (INBOX.unmatched||[]).find(x=>x.id===add); if (!m) return;
-    const title = prompt(`Job title at ${m.company}?`, (m.subject.match(/(?:for|–|-)\s+(?:the\s+)?([^|!]+?)(?:\s+(?:role|position|at)\b|$)/i)||[])[1] || "Product Designer"); if (title === null) return;
+    const title = prompt(`Job title at ${m.company}?`, (m.subject.match(/(?:for|–|-)\s+(?:the\s+)?([^|!]+?)(?:\s+(?:role|position|at)\b|$)/i)||[])[1] || ""); if (title === null) return;
     const id = "a-" + Date.now().toString(36), status = {received:"applied", interview:"interview", offer:"offer", rejected:"rejected"}[m.kind];
-    const job = {id, url:m.link, title, company:m.company, location:"Not stated", where:"US", track:"Product / UI-UX design", type:"Full-time", fit:null, h1b:"Unknown", posted:m.date, resume:"digital-design.pdf", flags:[]};
+    const job = {id, url:m.link, title, company:m.company, location:"Not stated", where:"Elsewhere", track:(TRACKS[0]||{}).name||"", type:"Full-time", fit:null, h1b:"Unknown", posted:m.date, flags:[]};
     STATE.added = [...(STATE.added||[]), job];
     STATE.jobs[id] = {status, title, company:m.company, appliedOn:m.date, updated:m.date, statusFrom:"email", lastEmail:{date:m.date, kind:m.kind, subject:m.subject, link:m.link}};
     JOBS.unshift({...job, added:true}); persist();
@@ -744,9 +759,9 @@ $("#addForm").addEventListener("submit", e => {
   if (e.submitter?.value !== "ok") return;
   const f = Object.fromEntries(new FormData(e.target));
   const id = "a-" + Date.now().toString(36);
-  const nyc = /new york|nyc|brooklyn/i.test(f.location), remote = /remote/i.test(f.location);
-  const job = {id, ...f, location: f.location || "Not stated", where: nyc ? "NYC" : remote ? "Remote (US)" : "US", nyc, remote,
-    fit: null, h1b: "Unknown", posted: new Date().toISOString().slice(0,10), resume: f.track === "Creative technology" ? "creative-technology.pdf" : f.track === "Visual / brand design" ? "graphic-design.docx" : "digital-design.pdf", flags: []};
+  const home = !!(HOME_RE && HOME_RE.test(f.location)), remote = /remote/i.test(f.location);
+  const job = {id, ...f, location: f.location || "Not stated", where: home ? HOME.label : remote ? "Remote" : "Elsewhere", home, remote,
+    fit: null, h1b: "Unknown", posted: new Date().toISOString().slice(0,10), flags: []};
   STATE.added = [...(STATE.added||[]), job];
   STATE.jobs[id] = {status:"saved", title:job.title, company:job.company, updated: job.posted};
   JOBS.unshift({...job, added:true}); persist(); render(); e.target.reset(); toast("Saved to your pipeline");

@@ -1,0 +1,52 @@
+{
+ "_about": "A mid-level backend engineer in the US who is a citizen (no visa checks), open to Seattle or remote.",
+ "search": {
+  "headline": "mid-level backend and platform software engineering roles",
+  "tracks": [
+   {
+    "name": "Backend engineer",
+    "short": "Backend",
+    "key": "backend",
+    "points": 3,
+    "on": true,
+    "titles": "back[- ]?end|server[- ]?side|api engineer|software engineer|software developer"
+   },
+   {
+    "name": "Platform / infrastructure",
+    "short": "Platform",
+    "key": "platform",
+    "points": 3,
+    "on": true,
+    "titles": "platform engineer|infrastructure engineer|site reliability|\\bsre\\b|devops"
+   },
+   {
+    "name": "Full-stack engineer",
+    "short": "Full-stack",
+    "key": "fullstack",
+    "points": 2,
+    "on": true,
+    "titles": "full[- ]?stack"
+   },
+   {
+    "name": "Data engineer",
+    "short": "Data eng",
+    "key": "data",
+    "points": 1,
+    "on": false,
+    "titles": "data engineer"
+   }
+  ],
+  "exclude_titles": "principal|staff|director|manager|\\bvp\\b|head of|intern|embedded|firmware|hardware|qa\\b|test engineer|salesforce|sap\\b|front[- ]?end|mobile|\\bios\\b|android",
+  "level": "experienced",
+  "country": "US",
+  "home": {
+   "label": "Seattle",
+   "pattern": "seattle|bellevue|redmond|kirkland"
+  },
+  "remote": true,
+  "needs_sponsorship": false,
+  "student_visa": false,
+  "role_word": "software engineer",
+  "max_age_days": 21
+ }
+}

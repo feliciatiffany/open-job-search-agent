@@ -20,6 +20,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fetch_jobs import norm  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
+SEARCH = json.loads((ROOT / "profile" / "settings.json").read_text(encoding="utf-8")).get("search", {})
+ROLE_RE = re.compile(SEARCH.get("h1b_role_titles") or "$^", re.I)  # LCA job titles that count as "the same kind of role"
 CAP_EXEMPT = re.compile(r"university|college|school of|institute of technology|research foundation|hospital|medical center|langone|mount sinai|sloan kettering", re.I)
 
 
@@ -28,7 +30,7 @@ def lookup(company: str) -> dict:
     url = "https://h1bdata.info/index.php?" + urllib.parse.urlencode({"em": name, "job": "", "city": "", "year": "All Years"})
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (job-search bot)"})
     html = urllib.request.urlopen(req, timeout=60).read().decode("utf-8", "ignore")
-    design = total = 0
+    role = total = 0
     years: set[str] = set()
     example = None
     for row in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S):
@@ -37,14 +39,13 @@ def lookup(company: str) -> dict:
             continue
         total += 1
         years.add(cells[4][-4:])
-        t = cells[1].upper()
-        if ("DESIGN" in t and "ENGINEER" not in t) or "UX" in t or "USER EXPERIENCE" in t:
-            design += 1
+        if ROLE_RE.search(cells[1]):
+            role += 1
             example = example or f"{cells[1].title()}, {cells[3].title()}, {cells[4][-4:]}, ${cells[2]}"
     ys = sorted(y for y in years if y.isdigit())
     return {
         "name": company,
-        "design": design,
+        "role": role,
         "total": total,
         "years": f"{ys[0]}–{ys[-1]}" if ys else "",
         "example": example,
@@ -77,7 +78,7 @@ def main() -> None:
         for c, info in ex.map(one, todo):
             if "error" not in info:
                 cache[norm(c)] = info
-                print(f"  {c}: {info['design']} design / {info['total']} total LCAs")
+                print(f"  {c}: {info['role']} same-role / {info['total']} total LCAs")
     path.write_text(json.dumps(cache, indent=1, ensure_ascii=False))
     print("Saved data/h1b.json. Re-run fetch_jobs.py to rescore.")
 

@@ -12,7 +12,6 @@
    "company": "Lumen Health",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -25,22 +24,22 @@
     "level": 1
    },
    "h1b": "42 designer LCAs",
-   "salary": "$120k\u2013$135k",
+   "salary": "$120k–$135k",
    "posted": "2026-11-07",
    "url": "https://jobs.example.com/lumen-health/478660",
    "ats": "example",
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "b48a9051772b",
    "title": "Associate Product Designer",
    "company": "Fieldnote",
    "location": "Remote (US)",
-   "where": "Remote (US)",
-   "nyc": false,
+   "where": "Remote",
    "remote": true,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -60,7 +59,8 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "102a6c18c0a5",
@@ -68,7 +68,6 @@
    "company": "Harbor Maps",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Internship",
@@ -88,7 +87,8 @@
    "flags": [],
    "season": "Summer",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "165fa7e13a03",
@@ -96,7 +96,6 @@
    "company": "Brightline Bank",
    "location": "New York, NY (hybrid)",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -116,7 +115,8 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "7e8994fd2140",
@@ -124,7 +124,6 @@
    "company": "Kettle",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Frontend / design engineer",
    "type": "Full-time",
@@ -137,22 +136,22 @@
     "level": 1
    },
    "h1b": "25 total LCAs",
-   "salary": "$130k\u2013$150k",
+   "salary": "$130k–$150k",
    "posted": "2026-11-08",
    "url": "https://jobs.example.com/kettle/555984",
    "ats": "example",
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "db2875f1c943",
    "title": "Junior Frontend Developer (UI)",
    "company": "Parcel & Pine",
    "location": "Remote (US)",
-   "where": "Remote (US)",
-   "nyc": false,
+   "where": "Remote",
    "remote": true,
    "track": "Frontend / design engineer",
    "type": "Full-time",
@@ -172,7 +171,8 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "89bc3321fe0d",
@@ -180,7 +180,6 @@
    "company": "Orbit Learning",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Frontend / design engineer",
    "type": "Internship",
@@ -200,7 +199,8 @@
    "flags": [],
    "season": "Spring 2027 (during school: needs CPT)",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "9318c0ae1f6f",
@@ -208,7 +208,6 @@
    "company": "Studio Halcyon",
    "location": "Brooklyn, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Creative technology",
    "type": "Full-time",
@@ -228,7 +227,8 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "faf1bbaf55fd",
@@ -236,7 +236,6 @@
    "company": "City Science Museum",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Creative technology",
    "type": "Internship",
@@ -256,15 +255,15 @@
    "flags": [],
    "season": "Summer",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "24482a31de0c",
    "title": "Product Designer I",
    "company": "Tandem Freight",
    "location": "Chicago, IL",
-   "where": "US",
-   "nyc": false,
+   "where": "Elsewhere",
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -284,15 +283,15 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "d909c60b026c",
    "title": "UI Designer",
    "company": "Moss & Co.",
    "location": "Austin, TX",
-   "where": "US",
-   "nyc": false,
+   "where": "Elsewhere",
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -312,15 +311,15 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "faba2dfc0385",
    "title": "Web Designer, Brand Team",
    "company": "Northstar Outdoor",
    "location": "Remote (US)",
-   "where": "Remote (US)",
-   "nyc": false,
+   "where": "Remote",
    "remote": true,
    "track": "Visual / brand design",
    "type": "Full-time",
@@ -340,15 +339,15 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "ff8b5bbdcebe",
    "title": "Associate Experience Designer",
    "company": "Civic Lab",
    "location": "Washington, DC",
-   "where": "US",
-   "nyc": false,
+   "where": "Elsewhere",
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -368,15 +367,15 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "a1e7de676185",
    "title": "Design Systems Intern",
    "company": "Quanta Cloud",
    "location": "San Francisco, CA",
-   "where": "US",
-   "nyc": false,
+   "where": "Elsewhere",
    "remote": false,
    "track": "Frontend / design engineer",
    "type": "Internship",
@@ -396,7 +395,8 @@
    "flags": [],
    "season": "Summer",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "0b6060948870",
@@ -404,7 +404,6 @@
    "company": "Openhouse",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Co-op / apprenticeship",
@@ -424,15 +423,15 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "9d631d0fa617",
    "title": "Visual Designer, Marketing",
    "company": "Cobalt Coffee",
    "location": "Seattle, WA",
-   "where": "US",
-   "nyc": false,
+   "where": "Elsewhere",
    "remote": false,
    "track": "Visual / brand design",
    "type": "Full-time",
@@ -452,15 +451,15 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "d9b3b1621bc8",
    "title": "Frontend Engineer, Design Platform",
    "company": "Relay Robotics",
    "location": "Remote (US)",
-   "where": "Remote (US)",
-   "nyc": false,
+   "where": "Remote",
    "remote": true,
    "track": "Frontend / design engineer",
    "type": "Full-time",
@@ -480,7 +479,8 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "ffa11d292004",
@@ -488,7 +488,6 @@
    "company": "Greenway Transit",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Internship",
@@ -508,15 +507,15 @@
    "flags": [],
    "season": "Fall 2027 (during school: needs CPT)",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": true
   },
   {
    "id": "7ce039be25db",
    "title": "Motion & Interaction Designer",
    "company": "Paper Kite",
    "location": "Los Angeles, CA",
-   "where": "US",
-   "nyc": false,
+   "where": "Elsewhere",
    "remote": false,
    "track": "Creative technology",
    "type": "Full-time",
@@ -536,7 +535,8 @@
    "flags": [],
    "season": "Full-time",
    "linkSource": "company",
-   "reported": false
+   "reported": false,
+   "home": false
   },
   {
    "id": "f8cdfe155e3c",
@@ -544,7 +544,6 @@
    "company": "Sprout Money",
    "location": "New York, NY",
    "where": "NYC",
-   "nyc": true,
    "remote": false,
    "track": "Product / UI-UX design",
    "type": "Full-time",
@@ -556,7 +555,7 @@
     "sponsorship": 0.5,
     "level": 1
    },
-   "h1b": "Unknown \u2014 posting says no H-1B",
+   "h1b": "Unknown — posting says no H-1B",
    "salary": null,
    "posted": "2026-11-07",
    "url": "https://jobs.example.com/sprout-money/758330",
@@ -565,7 +564,8 @@
    "season": "Full-time",
    "linkSource": "company",
    "reported": false,
-   "sponsorshipText": "We are unable to sponsor H-1B visas for this role."
+   "sponsorshipText": "We are unable to sponsor H-1B visas for this role.",
+   "home": true
   }
  ]
 }
