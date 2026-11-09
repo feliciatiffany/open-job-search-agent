@@ -1,0 +1,52 @@
+{
+ "_about": "A marketing generalist at any level in Chicago or remote, US work authorization already in hand.",
+ "search": {
+  "headline": "content, growth and product marketing roles",
+  "tracks": [
+   {
+    "name": "Content marketing",
+    "short": "Content",
+    "key": "content",
+    "points": 3,
+    "on": true,
+    "titles": "content (marketing|strategist|manager|writer)|copywriter|editorial"
+   },
+   {
+    "name": "Growth / performance",
+    "short": "Growth",
+    "key": "growth",
+    "points": 3,
+    "on": true,
+    "titles": "growth marketing|performance marketing|demand gen|paid (social|search)|lifecycle"
+   },
+   {
+    "name": "Product marketing",
+    "short": "Product marketing",
+    "key": "pmm",
+    "points": 2,
+    "on": true,
+    "titles": "product marketing"
+   },
+   {
+    "name": "Social media",
+    "short": "Social",
+    "key": "social",
+    "points": 1,
+    "on": false,
+    "titles": "social media|community manager"
+   }
+  ],
+  "exclude_titles": "director|\\bvp\\b|head of|chief|sales representative|account executive",
+  "level": "any",
+  "country": "US",
+  "home": {
+   "label": "Chicago",
+   "pattern": "chicago|evanston|oak park"
+  },
+  "remote": true,
+  "needs_sponsorship": false,
+  "student_visa": false,
+  "role_word": "marketer",
+  "max_age_days": 30
+ }
+}

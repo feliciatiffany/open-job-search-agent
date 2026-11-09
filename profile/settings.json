@@ -1,20 +1,88 @@
 {
- "_note": "Everything personal the app needs, in one place. This is a made-up sample candidate: replace it with your own.",
+ "_note": "Everything personal the app needs, in one place. This is a made-up sample candidate (an entry-level designer): replace it with your own. See profile/examples/ for other careers.",
  "app_title": "Open Job Search Agent",
  "name": "Alex Rivera",
  "short_name": "Alex",
  "email": "alex.rivera@example.com",
- "my_addresses": ["alex.rivera@example.com", "arivera@student.example.edu"],
+ "my_addresses": [
+  "alex.rivera@example.com",
+  "arivera@student.example.edu"
+ ],
  "signoff": "Best,\nAlex",
  "graduation": "May 2027",
- "needs_sponsorship": true,
+ "search": {
+  "_note": "What jobs to look for. 'titles' and 'exclude_titles' are lowercase regular expressions matched against job titles. Each track's 'key' must match the role keys in profile/resume.json (tracks, skills).",
+  "headline": "entry-level product design, UI/UX, frontend and design-engineering roles",
+  "tracks": [
+   {
+    "name": "Product / UI-UX design",
+    "short": "Product / UI-UX",
+    "key": "product",
+    "points": 3,
+    "on": true,
+    "titles": "product design|\\bux\\b|\\bui\\b|ui/ux|ux/ui|user experience|interaction design|web design|digital product design"
+   },
+   {
+    "name": "Frontend / design engineer",
+    "short": "Frontend / design eng",
+    "key": "frontend",
+    "points": 3,
+    "on": true,
+    "titles": "front[- ]?end.{0,25}(engineer|developer|dev\\b)|(software|web).{0,20}front[- ]?end|\\bui engineer|\\bux engineer|(product|ux|ui|web|software|creative|frontend) design engineer|design engineer.{0,10}(ux|ui|web|frontend|product)|design technologist|web developer|ui developer"
+   },
+   {
+    "name": "Creative technology",
+    "short": "Creative tech",
+    "key": "creative",
+    "points": 2,
+    "on": true,
+    "titles": "creative technolog|prototyp|experience design|immersive|interactive design|motion design|digital design(er)?\\b"
+   },
+   {
+    "name": "Visual / brand design",
+    "short": "Visual / brand",
+    "key": "visual",
+    "points": 1,
+    "on": false,
+    "titles": "visual design|graphic design|brand design|content design"
+   }
+  ],
+  "exclude_titles": "mechanical|electrical|hardware|asic|fpga|silicon|circuit|analog|rf |structural|civil|hvac|piping|process design|product design engineer|physical design|layout|cad\\b|tooling|packaging engineer|\\.net|java\\b|salesforce|sap\\b|software (engineer|engineering|developer|development)|\\bswe\\b|\\bsde\\b|backend|back-end|full[- ]?stack|research(er)?\\b|automotive|aerospace",
+  "level": "entry",
+  "country": "US",
+  "home": {
+   "label": "NYC",
+   "pattern": "new york city|\\bnyc\\b|brooklyn|manhattan|queens|bronx|staten island|jersey city|hoboken|long island city|(^|[;/(]\\s*)new york(\\s*,\\s*(ny|new york|us-ny|united states|us)\\b|\\s*$|\\s*[;/)])"
+  },
+  "remote": true,
+  "needs_sponsorship": true,
+  "student_visa": true,
+  "role_word": "designer",
+  "h1b_role_titles": "design|\\bux\\b|user experience",
+  "max_age_days": 45
+ },
  "email_start_date": "2026-11-01",
  "alumni_searches": [
-  {"label": "Hudson College alumni", "linkedin_school": "hudson-college-of-art-and-design-example"}
+  {
+   "label": "Hudson College alumni",
+   "linkedin_school": "hudson-college-of-art-and-design-example"
+  }
  ],
- "community_search": {"label": "Filipino community", "keyword": "Philippines"},
- "school_alternates": ["Hudson College of Art and Design", "Hudson College", "Hudson"],
- "major_alternates": ["Interaction Design", "Design and Technology", "Design", "Fine Arts"],
+ "community_search": {
+  "label": "Filipino community",
+  "keyword": "Philippines"
+ },
+ "school_alternates": [
+  "Hudson College of Art and Design",
+  "Hudson College",
+  "Hudson"
+ ],
+ "major_alternates": [
+  "Interaction Design",
+  "Design and Technology",
+  "Design",
+  "Fine Arts"
+ ],
  "lead_with": {
   "Product / UI-UX design": "Pantry (food-sharing app, Figma + React) · Transit Lens (wayfinding research) · Campus Housing redesign",
   "Frontend / design engineer": "Neighborhood Archive (Eleventy + JS) · Pantry React prototype · design-system tokens",

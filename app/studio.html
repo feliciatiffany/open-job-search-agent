@@ -106,7 +106,7 @@ form.ask textarea{flex:1;resize:none;height:62px;border:1px solid var(--line);ba
     <div class="msgs" id="msgs" aria-live="polite"></div>
     <div class="typing" id="typing" hidden>Thinking… (10–40 seconds)</div>
     <div class="chips" id="chips"></div>
-    <form class="ask" id="ask"><textarea id="q" placeholder="e.g. Make the resume more product-design focused, or write my cover letter"></textarea><button class="btn primary" id="send">Send</button></form>
+    <form class="ask" id="ask"><textarea id="q" placeholder="e.g. Tailor the resume to this posting, or write my cover letter"></textarea><button class="btn primary" id="send">Send</button></form>
   </aside>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -122,8 +122,8 @@ const esc = s => Tailor.esc(s);
 function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("show"); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove("show"),1800); }
 
 const CHIPS = {
-  resume: ["Tailor my resume to this posting", "Make it more product-design focused", "Emphasize React / frontend skills", "Make bullets more impact-focused (keep facts)", "Swap in my most relevant project", "Check it fits on one page"],
-  letter: ["Write my cover letter for this job", "Make it shorter (under 250 words)", "Make it warmer and more personal", "Lead with my strongest project", "Mention my community work", "Turn it into a short portfolio email"]
+  resume: ["Tailor my resume to this posting", "Lead with the skills this posting asks for", "Make bullets more impact-focused (keep facts)", "Swap in my most relevant project", "Check it fits on one page"],
+  letter: ["Write my cover letter for this job", "Make it shorter (under 250 words)", "Make it warmer and more personal", "Lead with my strongest project", "Mention my community work", "Turn it into a short outreach email"]
 };
 
 (async function boot(){

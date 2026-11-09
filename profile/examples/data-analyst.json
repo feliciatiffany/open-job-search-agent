@@ -1,0 +1,52 @@
+{
+ "_about": "A new-grad data analyst in the UK, London or remote.",
+ "search": {
+  "headline": "entry-level data analyst and business intelligence roles",
+  "tracks": [
+   {
+    "name": "Data analyst",
+    "short": "Data analyst",
+    "key": "analyst",
+    "points": 3,
+    "on": true,
+    "titles": "data analyst|analytics analyst|insights analyst|reporting analyst"
+   },
+   {
+    "name": "Business intelligence",
+    "short": "BI",
+    "key": "bi",
+    "points": 2,
+    "on": true,
+    "titles": "business intelligence|\\bbi\\b (analyst|developer)|power bi|tableau"
+   },
+   {
+    "name": "Product / marketing analytics",
+    "short": "Product analytics",
+    "key": "product",
+    "points": 2,
+    "on": true,
+    "titles": "product analyst|marketing analyst|growth analyst"
+   }
+  ],
+  "exclude_titles": "engineer|scientist|financial analyst|credit analyst|security analyst|soc analyst",
+  "level": "entry",
+  "country": "GB",
+  "country_names": [
+   "UNITED KINGDOM",
+   "UK",
+   "England",
+   "London",
+   "Manchester",
+   "Edinburgh"
+  ],
+  "home": {
+   "label": "London",
+   "pattern": "london"
+  },
+  "remote": true,
+  "needs_sponsorship": false,
+  "student_visa": false,
+  "role_word": "",
+  "max_age_days": 30
+ }
+}
