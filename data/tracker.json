@@ -1,0 +1,156 @@
+{
+ "_note": "SAMPLE tracker for the made-up candidate.",
+ "jobs": {
+  "188374c08dc4": {
+   "status": "interview",
+   "title": "Product Designer, New Grad",
+   "company": "Lumen Health",
+   "url": "https://jobs.example.com/lumen-health/478660",
+   "updated": "2026-11-08",
+   "appliedOn": "2026-10-28",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-10-27"
+    },
+    {
+     "status": "saved",
+     "on": "2026-10-28"
+    },
+    {
+     "status": "applied",
+     "on": "2026-11-05"
+    }
+   ],
+   "statusFrom": "email",
+   "lastEmail": {
+    "date": "2026-11-05",
+    "kind": "interview",
+    "subject": "Next steps: Product Designer, New Grad",
+    "link": ""
+   },
+   "notes": "Portfolio review Nov 12, 2pm. Bring Pantry case study.",
+   "coverLetter": "Dear Lumen Health Team,\n\nI'm Alex, an interaction designer who builds what I design. Lumen's work on making appointment booking calmer for patients is exactly the kind of problem I want to spend my first years on, and I'd love to join as a Product Designer.\n\nLast spring I designed Pantry, a neighborhood food-sharing app. It started with a class survey: 41 of 60 students said they had thrown away food they could have shared. I ran three rounds of usability testing and raised task success from 58% to 91%, then built the core flow in React so engineers could feel the interactions, not just see them.\n\nThis summer at Northwind Studio I designed onboarding screens and a 40-icon set that shipped in a client's mobile app, and built a Figma component library shared by three designers and two engineers.\n\nOutside class, I run our 120-member student design club and mentor first-years, which taught me to give and take critique well.\n\nYou can see Pantry and my other work at example.com/alex/work. I'd love to talk about how I could help Lumen's patients.\n\nBest,\nAlex",
+   "chat": [
+    {
+     "role": "user",
+     "text": "Write my cover letter for this job"
+    },
+    {
+     "role": "ai",
+     "text": "Done! I led with Pantry since the role is about patient flows, and kept every number from your resume."
+    }
+   ]
+  },
+  "102a6c18c0a5": {
+   "status": "applied",
+   "title": "Product Design Intern, Summer 2027",
+   "company": "Harbor Maps",
+   "url": "https://jobs.example.com/harbor-maps/519136",
+   "updated": "2026-11-08",
+   "appliedOn": "2026-11-03",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-11-03"
+    }
+   ],
+   "notes": "Applied with the form filler.",
+   "appliedVia": "form filler (greenhouse)"
+  },
+  "b48a9051772b": {
+   "status": "applied",
+   "title": "Associate Product Designer",
+   "company": "Fieldnote",
+   "url": "https://jobs.example.com/fieldnote/173483",
+   "updated": "2026-11-08",
+   "appliedOn": "2026-10-12",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-10-12"
+    }
+   ]
+  },
+  "165fa7e13a03": {
+   "status": "rejected",
+   "title": "UX Designer, Early Career",
+   "company": "Brightline Bank",
+   "url": "https://jobs.example.com/brightline-bank/166304",
+   "updated": "2026-11-08",
+   "appliedOn": "2026-10-15",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-10-15"
+    },
+    {
+     "status": "applied",
+     "on": "2026-11-02"
+    }
+   ],
+   "statusFrom": "email",
+   "lastEmail": {
+    "date": "2026-11-02",
+    "kind": "rejected",
+    "subject": "Update on your application",
+    "link": ""
+   }
+  },
+  "24482a31de0c": {
+   "status": "closed",
+   "title": "Product Designer I",
+   "company": "Tandem Freight",
+   "url": "https://jobs.example.com/tandem-freight/773885",
+   "updated": "2026-11-08",
+   "closedWhy": "Posting closed before I applied",
+   "history": [
+    {
+     "status": "saved",
+     "on": "2026-11-01"
+    }
+   ]
+  },
+  "7e8994fd2140": {
+   "status": "saved",
+   "title": "Design Engineer, New Grad",
+   "company": "Kettle",
+   "url": "https://jobs.example.com/kettle/555984",
+   "updated": "2026-11-08",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-11-07"
+    }
+   ],
+   "notes": "Referral? Ask Sam from design club."
+  },
+  "0b6060948870": {
+   "status": "saved",
+   "title": "Product Design Apprentice",
+   "company": "Openhouse",
+   "url": "https://jobs.example.com/openhouse/136979",
+   "updated": "2026-11-08",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-11-06"
+    }
+   ]
+  },
+  "d909c60b026c": {
+   "status": "dismissed",
+   "title": "UI Designer",
+   "company": "Moss & Co.",
+   "url": "https://jobs.example.com/moss-and-co/783728",
+   "updated": "2026-11-08",
+   "history": [
+    {
+     "status": null,
+     "on": "2026-11-04"
+    }
+   ]
+  }
+ },
+ "added": []
+}

@@ -1,0 +1,318 @@
+{
+ "_note": "Sample source-of-truth resume for a made-up candidate. The tailored-resume builder only selects and orders lines from here; the AI may rephrase but never invent.",
+ "name": "Alex Rivera",
+ "location": "New York, United States",
+ "email": "alex.rivera@example.com",
+ "links": [
+  {
+   "label": "LinkedIn",
+   "url": "https://www.linkedin.com/in/example-alex-rivera/"
+  },
+  {
+   "label": "Portfolio",
+   "url": "https://example.com/alex"
+  },
+  {
+   "label": "GitHub",
+   "url": "https://github.com/example-alex"
+  }
+ ],
+ "education": {
+  "school": "Hudson College of Art and Design",
+  "where": "New York, USA",
+  "dates": "August 2023 - Expected May 2027",
+  "lines": [
+   {
+    "text": "BFA in Interaction Design, 3.8/4.00 GPA",
+    "tracks": [
+     "*"
+    ]
+   },
+   {
+    "text": "Coursework: Interaction Design Studio, Design Systems, Creative Coding, Typography",
+    "tracks": [
+     "product",
+     "frontend",
+     "visual"
+    ]
+   },
+   {
+    "text": "Dean's List (5 semesters) · International Merit Scholarship",
+    "tracks": [
+     "*"
+    ]
+   }
+  ]
+ },
+ "experience": [
+  {
+   "id": "northwind",
+   "title": "Product Design Intern / Northwind Studio",
+   "where": "Brooklyn, USA",
+   "dates": "June 2026 - August 2026",
+   "tracks": {
+    "product": 3,
+    "frontend": 2,
+    "creative": 1,
+    "visual": 3
+   },
+   "bullets": [
+    "Designed onboarding screens and a 40-icon set for a client's mobile app, shipped in the September release",
+    "Ran 6 moderated usability tests and turned findings into 12 prioritized fixes with the product manager",
+    "Built a Figma component library with tokens shared by 3 designers and 2 engineers",
+    "Refreshed the studio's own brand guidelines and website templates"
+   ]
+  },
+  {
+   "id": "club",
+   "title": "President / Student Design Club",
+   "where": "New York, USA",
+   "dates": "September 2025 - Present",
+   "tracks": {
+    "product": 2,
+    "frontend": 1,
+    "creative": 2,
+    "visual": 2
+   },
+   "bullets": [
+    "Lead a 120-member club: weekly critiques, portfolio reviews and an annual design-a-thon",
+    "Started a mentorship program pairing 30 first-years with upper-year students",
+    "Grew event attendance from about 25 to 70 per session in one year"
+   ]
+  },
+  {
+   "id": "ta",
+   "title": "Teaching Assistant / Creative Coding",
+   "where": "New York, USA",
+   "dates": "January 2026 - May 2026",
+   "tracks": {
+    "product": 1,
+    "frontend": 3,
+    "creative": 3,
+    "visual": 0
+   },
+   "bullets": [
+    "Supported 24 students learning p5.js and JavaScript in weekly lab sessions",
+    "Wrote 8 short tutorials on animation, arrays and interaction that the course now reuses"
+   ]
+  },
+  {
+   "id": "lab",
+   "title": "Digital Lab Assistant / College Library",
+   "where": "New York, USA",
+   "dates": "September 2024 - Present",
+   "tracks": {
+    "product": 1,
+    "frontend": 2,
+    "creative": 2,
+    "visual": 1
+   },
+   "bullets": [
+    "Help students with Adobe CC, Figma, 3D printers and the Riso printer, about 15 visits a shift",
+    "Redesigned the lab's booking page, cutting double bookings to almost zero"
+   ]
+  },
+  {
+   "id": "freelance",
+   "title": "Freelance Designer",
+   "where": "Remote",
+   "dates": "2023 - Present",
+   "tracks": {
+    "product": 1,
+    "frontend": 1,
+    "creative": 0,
+    "visual": 3
+   },
+   "bullets": [
+    "Designed logos, menus and social templates for 5 small businesses",
+    "Built a Squarespace site for a local bakery and trained the owner to update it"
+   ]
+  }
+ ],
+ "projects": [
+  {
+   "id": "pantry",
+   "name": "Pantry: Neighborhood Food Sharing",
+   "tools": "Figma, React",
+   "year": "2026",
+   "url": "https://example.com/alex/pantry",
+   "tracks": {
+    "product": 5,
+    "frontend": 4,
+    "creative": 1,
+    "visual": 2
+   },
+   "keywords": [
+    "mobile",
+    "app",
+    "ux",
+    "research",
+    "usability",
+    "prototype",
+    "react",
+    "figma",
+    "flows"
+   ],
+   "text": "Designed and prototyped a food-sharing app after a survey found 41 of 60 students threw away food they could share. Three rounds of usability testing raised task success from 58% to 91%; built the core flow in React."
+  },
+  {
+   "id": "transit",
+   "name": "Transit Lens: Accessible Wayfinding",
+   "tools": "Figma, Maze",
+   "year": "2025",
+   "url": "https://example.com/alex/transit-lens",
+   "tracks": {
+    "product": 5,
+    "frontend": 2,
+    "creative": 2,
+    "visual": 2
+   },
+   "keywords": [
+    "accessibility",
+    "research",
+    "wayfinding",
+    "ux",
+    "interviews",
+    "mobile",
+    "inclusive"
+   ],
+   "text": "Interviewed 14 riders with low vision and designed a high-contrast, audio-first subway wayfinding concept; tested with Maze across 3 iterations."
+  },
+  {
+   "id": "archive",
+   "name": "Neighborhood Archive",
+   "tools": "Eleventy, JavaScript, CSS",
+   "year": "2025",
+   "url": "https://example.com/alex/archive",
+   "tracks": {
+    "product": 3,
+    "frontend": 5,
+    "creative": 2,
+    "visual": 2
+   },
+   "keywords": [
+    "web",
+    "website",
+    "frontend",
+    "javascript",
+    "css",
+    "eleventy",
+    "accessibility",
+    "static"
+   ],
+   "text": "Designed and built a static site of 200+ oral-history clips with search and filters; scores 100 on Lighthouse accessibility."
+  },
+  {
+   "id": "loom",
+   "name": "Loom Lab",
+   "tools": "p5.js, Projection",
+   "year": "2025",
+   "url": "https://example.com/alex/loom-lab",
+   "tracks": {
+    "product": 1,
+    "frontend": 3,
+    "creative": 5,
+    "visual": 3
+   },
+   "keywords": [
+    "creative coding",
+    "installation",
+    "generative",
+    "interactive",
+    "p5.js",
+    "projection",
+    "motion"
+   ],
+   "text": "Generative textile patterns that visitors weave by moving their hands; shown at the spring open studio to about 300 visitors."
+  },
+  {
+   "id": "echo",
+   "name": "Echo Garden",
+   "tools": "Arduino, Max/MSP",
+   "year": "2024",
+   "url": "https://example.com/alex/echo-garden",
+   "tracks": {
+    "product": 1,
+    "frontend": 2,
+    "creative": 5,
+    "visual": 1
+   },
+   "keywords": [
+    "physical computing",
+    "arduino",
+    "sound",
+    "installation",
+    "sensors",
+    "interactive"
+   ],
+   "text": "Plants that hum when touched: capacitive sensors and Max/MSP sound design in a 6-plant installation."
+  },
+  {
+   "id": "zine",
+   "name": "Riso Zine Series",
+   "tools": "InDesign, Riso",
+   "year": "2024",
+   "url": "https://example.com/alex/zines",
+   "tracks": {
+    "product": 0,
+    "frontend": 0,
+    "creative": 1,
+    "visual": 5
+   },
+   "keywords": [
+    "print",
+    "typography",
+    "editorial",
+    "brand",
+    "visual",
+    "layout"
+   ],
+   "text": "Four issues of a two-color riso zine about New York food carts; 400 copies distributed."
+  }
+ ],
+ "skills": {
+  "product": [
+   "Figma",
+   "FigJam",
+   "User Research",
+   "Usability Testing",
+   "Prototyping",
+   "Design Systems",
+   "Maze",
+   "HTML/CSS",
+   "JavaScript",
+   "React"
+  ],
+  "frontend": [
+   "HTML",
+   "CSS",
+   "JavaScript",
+   "React",
+   "Eleventy",
+   "Git",
+   "Figma",
+   "Accessibility (WCAG)",
+   "Design Tokens"
+  ],
+  "creative": [
+   "p5.js",
+   "Arduino",
+   "Max/MSP",
+   "TouchDesigner",
+   "Projection Mapping",
+   "JavaScript",
+   "Figma"
+  ],
+  "visual": [
+   "Figma",
+   "Illustrator",
+   "InDesign",
+   "Photoshop",
+   "Typography",
+   "Brand Systems",
+   "Riso Printing"
+  ]
+ },
+ "languages": "Fluent in English and Tagalog",
+ "awards": "Student Design Award, Honorable Mention 2026 · Design-a-thon Winner 2025"
+}

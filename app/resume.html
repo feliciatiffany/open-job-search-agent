@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tailored Resume</title>
+<style>
+/* Two parts: a control panel (screen only) and the resume "paper", which is all that prints. */
+:root{--bg:#ffffff;--surface:#ffffff;--fg:#37352f;--muted:#787774;--line:#e9e9e7;--hover:#f7f7f5;--accent:#37352f;--accent-soft:#f1f1ef;--ink:#ffffff;--pink2:#c7c7c5;--ok:#448361;--ok-soft:#edf3ec;--warn:#9f6b53;--warn-soft:#f4eeee;--display:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;--body:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;--mono:"SFMono-Regular",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#191919;--surface:#202020;--fg:#e3e2e0;--muted:#9b9a97;--line:#2f2f2f;--hover:#252525;--accent:#e3e2e0;--accent-soft:#2c2c2c;--ink:#191919;--pink2:#555;--ok:#5fae8e;--ok-soft:#1f2b25;--warn:#c69779;--warn-soft:#2e2622;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 ui-sans-serif,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.shell{display:grid;grid-template-columns:300px 1fr;gap:20px;padding:20px;max-width:1200px;margin:0 auto}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:12px;align-self:start;position:sticky;top:12px}
+.panel h2{font:700 17px ui-sans-serif,-apple-system,sans-serif;margin:0}
+.panel h3{font:600 11.5px ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:4px 0}
+.panel label{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer}
+.why{background:var(--accent-soft);border-radius:8px;padding:8px 10px;font-size:13px}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--ink);border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:14px}
+.btn.ghost{background:transparent;color:var(--accent)}
+.note{font-size:12px;color:var(--muted)}
+.paperwrap{overflow:auto}
+/* The resume itself mirrors a classic Word layout: Times, centered name, ruled section heads, right-aligned dates. */
+.paper{background:#fff;color:#000;width:8.5in;min-height:11in;margin:0 auto;padding:.45in .55in;box-shadow:0 2px 14px rgba(15,15,15,.12);font-family:"Times New Roman",Times,serif;font-size:9.6pt;line-height:1.22}
+.paper h1{font-size:20pt;font-weight:400;text-align:center;margin:0;letter-spacing:.02em}
+.contact{text-align:center;font-size:10.5pt;margin-top:2px;font-variant:small-caps}
+.contact a{color:#000}
+.links{text-align:center;margin-top:3px;font-size:11pt}
+.links a{color:#1a3fd6;margin:0 22px}
+.paper h2{font-size:1.25em;font-weight:700;border-bottom:1px solid #000;margin:9px 0 4px;padding-bottom:1px;letter-spacing:.02em}
+.entry{display:grid;grid-template-columns:1fr auto;gap:0 12px;margin-bottom:4px}
+.entry .t{font-weight:700;font-style:italic;font-size:1.09em}
+.entry .d{text-align:right;font-size:1.04em;white-space:nowrap}
+.entry .d{grid-column:2;grid-row:1 / span 2;align-self:start}
+.entry ul{grid-column:1;grid-row:2;margin:1px 0 0;padding-left:15px}
+.entry li{margin:0;font-size:.98em;color:#222}
+.proj{margin-bottom:4px}
+.proj .t{font-size:1.14em}
+.proj .t a{color:#1a3fd6;font-style:italic}
+.proj .t i{font-style:italic}
+.proj p{margin:1px 0 0;font-size:.96em}
+.skills{font-size:1em}
+.embed .shell{display:block;padding:0}
+.embed .panel{display:none}
+.embed .paper{box-shadow:none}
+@media print{
+  @page{size:letter;margin:0}
+  body{background:#fff}
+  .panel{display:none}
+  .shell{display:block;padding:0}
+  .paper{box-shadow:none;margin:0}
+}
+@media (max-width:900px){.shell{grid-template-columns:1fr}.panel{position:static}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="panel" id="panel">
+    <h2 id="ptitle">Tailored resume</h2>
+    <div class="why" id="why"></div>
+    <div><h3>Projects</h3><div id="pproj"></div></div>
+    <div><h3>Experience</h3><div id="pexp"></div></div>
+    <button class="btn" onclick="window.print()">Save as PDF / Print</button>
+    <button class="btn ghost" id="resetSel">Reset to suggested</button>
+    <div class="note">Every line comes from your own resumes (profile/resume.json). Tick items on or off and your choice is saved for this job. When saving the PDF, pick "Save as PDF", 100% scale, and no headers.</div>
+  </aside>
+  <div class="paperwrap"><article class="paper" id="paper">Loading…</article></div>
+</div>
+<script src="/app/tailor.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const jobId = params.get("job");
+if (params.get("embed")) document.body.classList.add("embed");
+let R, JOB, STATE, plan;
+
+(async function(){
+  const [r, jobs, st] = await Promise.all([
+    fetch("/profile/resume.json").then(x=>x.json()),
+    fetch("/api/jobs").then(x=>x.json()).catch(()=>({jobs:[]})),
+    fetch("/api/state").then(x=>x.json()).catch(()=>({jobs:{}, added:[]}))
+  ]);
+  R = r; STATE = st;
+  JOB = [...(st.added||[]), ...jobs.jobs].find(j => j.id === jobId) || {title:"General", track:"Product / UI-UX design"};
+  draw();
+})();
+
+function draw(){
+  const saved = (STATE.jobs[jobId]||{}).resumePick;
+  plan = Tailor.plan(R, JOB, saved);
+  document.title = `${R.name} Resume - ${JOB.company||""} ${JOB.title||""}`.trim();
+  document.getElementById("ptitle").textContent = `${JOB.company ? JOB.company+": " : ""}${JOB.title}`;
+  document.getElementById("why").innerHTML = plan.reasons.map(x=>`• ${x}`).join("<br>");
+  const box = (list, chosen, kind) => list.map(x => `<label><input type="checkbox" data-kind="${kind}" value="${x.id}" ${chosen.includes(x.id)?"checked":""}> ${x.name || x.title.split("/")[0]}${x.group && x.tools ? ` <span class="note">(${x.tools.split(",")[0]})</span>`:""}</label>`).join("");
+  document.getElementById("pproj").innerHTML = box(R.projects, plan.projects.map(p=>p.id), "projects");
+  document.getElementById("pexp").innerHTML = box(R.experience, plan.experience.map(e=>e.id), "experience");
+  const paper = document.getElementById("paper");
+  const doc = (STATE.jobs[jobId]||{}).resumeDoc;
+  paper.innerHTML = doc ? Tailor.renderDoc(R, doc) : Tailor.render(R, plan);
+  if (doc) document.getElementById("why").innerHTML = "• Showing your edited version from the Studio (AI chat + manual edits).";
+  fitOnePage(paper);
+}
+// Shrink the type a little at a time until the resume fits on one Letter page (11in = 1056px at 96dpi).
+function fitOnePage(paper){
+  let size = 9.6;
+  paper.style.fontSize = size + "pt"; paper.style.minHeight = "0";
+  while (paper.scrollHeight > 1056 && size > 8.4){ size -= 0.2; paper.style.fontSize = size.toFixed(1) + "pt"; }
+  paper.style.minHeight = "";
+}
+document.addEventListener("change", e => {
+  if (!e.target.dataset.kind) return;
+  const pick = {projects:[...document.querySelectorAll('[data-kind=projects]:checked')].map(x=>x.value),
+                experience:[...document.querySelectorAll('[data-kind=experience]:checked')].map(x=>x.value)};
+  STATE.jobs[jobId] = {...(STATE.jobs[jobId]||{}), resumePick: pick, title: JOB.title, company: JOB.company};
+  fetch("/api/state",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(STATE)});
+  draw();
+});
+document.getElementById("resetSel").onclick = () => {
+  if (STATE.jobs[jobId]) delete STATE.jobs[jobId].resumePick;
+  fetch("/api/state",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(STATE)});
+  draw();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Application Studio</title>
+<style>
+/* Layout: top bar (job + doc tabs + actions) → two columns: the paper (resume or letter, editable) and the AI chat. */
+:root{--bg:#ffffff;--surface:#ffffff;--fg:#37352f;--muted:#787774;--line:#e9e9e7;--hover:#f7f7f5;--accent:#37352f;--accent-soft:#f1f1ef;--ink:#ffffff;--pink2:#c7c7c5;--ok:#448361;--ok-soft:#edf3ec;--warn:#9f6b53;--warn-soft:#f4eeee;--display:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;--body:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;--mono:"SFMono-Regular",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#191919;--surface:#202020;--fg:#e3e2e0;--muted:#9b9a97;--line:#2f2f2f;--hover:#252525;--accent:#e3e2e0;--accent-soft:#2c2c2c;--ink:#191919;--pink2:#555;--ok:#5fae8e;--ok-soft:#1f2b25;--warn:#c69779;--warn-soft:#2e2622;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#191919;--surface:#202020;--fg:#e3e2e0;--muted:#9b9a97;--line:#2f2f2f;--hover:#252525;--accent:#e3e2e0;--accent-soft:#2c2c2c;--ink:#191919;--pink2:#555;--ok:#5fae8e;--ok-soft:#1f2b25;--warn:#c69779;--warn-soft:#2e2622;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14.5px/1.5 var(--body)}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{position:sticky;top:0;z-index:3;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.top a.back{color:var(--muted);text-decoration:none;font-size:14px}
+.job{flex:1;min-width:220px}
+.job b{display:block;font:700 19px/1.2 var(--display)}
+.job span{font-size:13px;color:var(--muted)}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px}
+.seg button{border:0;background:none;padding:6px 14px;border-radius:7px;cursor:pointer;font-weight:600;color:var(--muted)}
+.seg button[aria-selected="true"]{background:var(--accent);color:var(--ink)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:500;font-size:14px}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.btn[disabled]{opacity:.5;cursor:default}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;padding:20px;max-width:1500px;margin:0 auto;align-items:start}
+.paperwrap{overflow:auto}
+.hint{font-size:12.5px;color:var(--muted);margin:0 auto 8px;width:8.5in;max-width:100%}
+.paper{background:#fff;color:#000;width:8.5in;min-height:11in;margin:0 auto;padding:.45in .55in;box-shadow:0 2px 14px rgba(15,15,15,.12);font-family:"Times New Roman",Times,serif;font-size:9.6pt;line-height:1.22;outline:none}
+.paper[contenteditable="true"]:focus{box-shadow:0 0 0 3px var(--pink2),0 2px 14px rgba(15,15,15,.12)}
+.paper h1{font-size:20pt;font-weight:400;text-align:center;margin:0}
+.paper .contact{text-align:center;font-size:10.5pt;margin-top:2px;font-variant:small-caps}
+.paper .contact a{color:#000}
+.paper .links{text-align:center;margin-top:3px;font-size:11pt}
+.paper .links a{color:#1a3fd6;margin:0 22px}
+.paper h2{font-size:1.25em;font-weight:700;border-bottom:1px solid #000;margin:9px 0 4px;padding-bottom:1px}
+.paper .entry{display:grid;grid-template-columns:1fr auto;gap:0 12px;margin-bottom:4px}
+.paper .entry .t{font-weight:700;font-style:italic;font-size:1.09em}
+.paper .entry .d{text-align:right;font-size:1.04em;white-space:nowrap;grid-column:2;grid-row:1 / span 2;align-self:start}
+.paper .entry ul{grid-column:1;grid-row:2;margin:1px 0 0;padding-left:15px}
+.paper .entry li{font-size:.98em;color:#222}
+.paper .proj{margin-bottom:4px}
+.paper .proj .t{font-size:1.14em}
+.paper .proj .t a{color:#1a3fd6;font-style:italic}
+.paper .proj p{margin:1px 0 0;font-size:.96em}
+.paper.letter{font-size:11.5pt;line-height:1.38;padding:.6in .8in}
+.paper.letter h1{font-size:20pt}
+.paper hr.rule{border:0;border-top:1px solid #000;margin:14px 0 18px}
+.paper.letter p{margin:0 0 11px}
+.paper.letter a{color:#1a3fd6}
+.paper .empty{color:#999}
+/* Chat */
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;position:sticky;top:76px;height:calc(100vh - 100px);min-height:420px}
+.chat header{padding:12px 14px;border-bottom:1px solid var(--line)}
+.chat header b{font:700 16px var(--display)}
+.chat header p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:92%;padding:9px 12px;border-radius:6px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;background:var(--accent);color:var(--ink);border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--accent-soft);border-bottom-left-radius:4px}
+.msg.err{align-self:flex-start;background:var(--warn-soft);color:var(--warn)}
+.msg ul{margin:6px 0 0;padding-left:18px;font-size:13px}
+.msg .tag{display:inline-block;font:500 11px var(--mono);background:var(--surface);color:var(--accent);border-radius:999px;padding:1px 7px;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px 0}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+form.ask{display:flex;gap:8px;padding:10px 14px 14px}
+form.ask textarea{flex:1;resize:none;height:62px;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:8px 10px}
+.typing{font-size:13px;color:var(--muted);padding:0 14px 6px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+@media (max-width:1100px){.main{grid-template-columns:1fr}.chat{position:static;height:560px}}
+@media print{
+  @page{size:letter;margin:0}
+  body{background:#fff}
+  .top,.chat,.hint{display:none!important}
+  .main{display:block;padding:0}
+  .paper{box-shadow:none;margin:0}
+}
+.printonly .top,.printonly .chat,.printonly .hint{display:none!important}
+.printonly .main{display:block;padding:0}
+.printonly .paper{box-shadow:none;margin:0}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="back" href="/">← Jobs</a>
+  <div class="job"><b id="jtitle">Loading…</b><span id="jmeta"></span></div>
+  <div class="seg" role="tablist">
+    <button role="tab" id="tab-resume" aria-selected="true" data-doc="resume">Resume</button>
+    <button role="tab" id="tab-letter" aria-selected="false" data-doc="letter">Cover letter</button>
+  </div>
+  <button class="btn" id="undo" disabled title="Undo last change">↶ Undo</button>
+  <button class="btn" id="reset" title="Back to the auto-tailored version">Reset</button>
+  <button class="btn primary" onclick="window.print()">Save as PDF</button>
+</div>
+<div class="main">
+  <div class="paperwrap">
+    <p class="hint" id="hint">Click anywhere on the page to type your own edits. They save automatically. Or ask the AI on the right.</p>
+    <article class="paper" id="paper" contenteditable="true" spellcheck="true"></article>
+  </div>
+  <aside class="chat" aria-label="AI assistant">
+    <header><b>Ask the AI</b><p>It knows your resumes, cover letters, voice and this job posting. It only uses true facts about you.</p></header>
+    <div class="msgs" id="msgs" aria-live="polite"></div>
+    <div class="typing" id="typing" hidden>Thinking… (10–40 seconds)</div>
+    <div class="chips" id="chips"></div>
+    <form class="ask" id="ask"><textarea id="q" placeholder="e.g. Make the resume more product-design focused, or write my cover letter"></textarea><button class="btn primary" id="send">Send</button></form>
+  </aside>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="/app/tailor.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const jobId = params.get("job");
+let docTab = params.get("doc") === "letter" ? "letter" : "resume";
+if (params.get("print")) document.body.classList.add("printonly");
+let R, JOB, ST = {}, resumeDoc, letter = "", chat = [], undoStack = [];
+const $ = s => document.querySelector(s);
+const esc = s => Tailor.esc(s);
+function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("show"); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove("show"),1800); }
+
+const CHIPS = {
+  resume: ["Tailor my resume to this posting", "Make it more product-design focused", "Emphasize React / frontend skills", "Make bullets more impact-focused (keep facts)", "Swap in my most relevant project", "Check it fits on one page"],
+  letter: ["Write my cover letter for this job", "Make it shorter (under 250 words)", "Make it warmer and more personal", "Lead with my strongest project", "Mention my community work", "Turn it into a short portfolio email"]
+};
+
+(async function boot(){
+  window.SETTINGS = await fetch("/profile/settings.json").then(x=>x.json()).catch(()=>({}));
+  const [r, jobs, st] = await Promise.all([fetch("/profile/resume.json").then(x=>x.json()), fetch("/api/jobs").then(x=>x.json()), fetch("/api/state").then(x=>x.json())]);
+  R = r; JOB = [...(st.added||[]), ...jobs.jobs].find(j => j.id === jobId);
+  if (!JOB){ $("#jtitle").textContent = "Job not found"; return; }
+  ST = st.jobs[jobId] || {};
+  resumeDoc = ST.resumeDoc || Tailor.docFromPlan(R, Tailor.plan(R, JOB, ST.resumePick));
+  letter = ST.coverLetter || "";
+  chat = ST.chat || [];
+  document.title = `Studio · ${JOB.company} · ${JOB.title}`;
+  $("#jtitle").textContent = JOB.title;
+  $("#jmeta").textContent = `${JOB.company} · ${JOB.location}${JOB.salary ? " · " + JOB.salary : ""}`;
+  if (!chat.length) chat.push({role:"ai", text:`Hi ${(window.SETTINGS||{}).short_name||"there"}! I've tailored a resume for ${JOB.company} from your own resumes. Ask me to change anything, or say "write my cover letter" and I'll draft one in your voice.`});
+  setTab(docTab); renderChat();
+})();
+
+function setTab(t){
+  docTab = t;
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-selected", b.dataset.doc === t));
+  $("#chips").innerHTML = CHIPS[t].map(c => `<button class="chip" type="button">${esc(c)}</button>`).join("");
+  draw();
+}
+function draw(){
+  const p = $("#paper");
+  p.className = "paper" + (docTab === "letter" ? " letter" : "");
+  p.innerHTML = docTab === "resume" ? Tailor.renderDoc(R, resumeDoc) : Tailor.renderLetter(R, letter);
+  p.style.fontSize = "";
+  if (docTab === "resume") fitOnePage(p);
+  $("#undo").disabled = !undoStack.length;
+}
+function fitOnePage(p){
+  let size = 9.6; p.style.fontSize = size + "pt"; p.style.minHeight = "0";
+  while (p.scrollHeight > 1056 && size > 8.2){ size -= 0.2; p.style.fontSize = size.toFixed(1) + "pt"; }
+  p.style.minHeight = "";
+  $("#hint").textContent = p.scrollHeight > 1056 ? "⚠ This is longer than one page. Ask the AI to trim it, or delete a bullet." : "Click anywhere on the page to type your own edits. They save automatically. Or ask the AI on the right.";
+}
+
+// Manual edits: read the edited page back into data.
+function readResumeFromPage(){
+  const p = $("#paper"), d = structuredClone(resumeDoc);
+  const entries = [...p.querySelectorAll(".entry")];
+  const edu = entries.shift();
+  if (edu) d.education.lines = [...edu.querySelectorAll("li")].map(li => li.innerText.trim()).filter(Boolean);
+  d.experience = entries.map((el, i) => ({...(resumeDoc.experience[i]||{}), title: el.querySelector(".t").innerText.trim(),
+    bullets: [...el.querySelectorAll("li")].map(li => li.innerText.trim()).filter(Boolean)}));
+  d.projects = [...p.querySelectorAll(".proj")].map((el, i) => ({...(resumeDoc.projects[i]||{}), text: el.querySelector("p").innerText.trim()}));
+  const sk = p.querySelector(".skills");
+  if (sk){ const txt = sk.innerText.replace(/\.\s*Proficient.*$/s, ""); d.skills = txt.split(",").map(s => s.trim()).filter(Boolean); }
+  return d;
+}
+function readLetterFromPage(){
+  return [...$("#paper").querySelectorAll("p")].filter(x => !x.classList.contains("empty")).map(x => x.innerText.trim()).filter(Boolean).join("\n\n");
+}
+let editTimer;
+$("#paper").addEventListener("input", () => {
+  clearTimeout(editTimer);
+  editTimer = setTimeout(() => {
+    pushUndo();
+    if (docTab === "resume") resumeDoc = readResumeFromPage(); else letter = readLetterFromPage();
+    save(); $("#undo").disabled = false;
+  }, 900);
+});
+$("#paper").addEventListener("blur", () => { if (docTab === "resume") fitOnePage($("#paper")); });
+
+function pushUndo(){ undoStack.push({resumeDoc: structuredClone(resumeDoc), letter}); if (undoStack.length > 30) undoStack.shift(); }
+$("#undo").onclick = () => { const s = undoStack.pop(); if (!s) return; resumeDoc = s.resumeDoc; letter = s.letter; save(); draw(); toast("Undone"); };
+$("#reset").onclick = () => {
+  if (!confirm(docTab === "resume" ? "Reset the resume to the auto-tailored version?" : "Clear this cover letter?")) return;
+  pushUndo();
+  if (docTab === "resume") resumeDoc = Tailor.docFromPlan(R, Tailor.plan(R, JOB)); else letter = "";
+  save(); draw();
+};
+
+async function save(){
+  try {
+    await fetch("/api/patch", {method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({id: jobId, fields: {resumeDoc, coverLetter: letter, chat: chat.slice(-40), title: JOB.title, company: JOB.company, url: JOB.url}})});
+  } catch(e){ toast("Couldn't save. Is the server running?"); }
+}
+
+function renderChat(){
+  $("#msgs").innerHTML = chat.map(m => `<div class="msg ${m.role === "user" ? "user" : m.role === "err" ? "err" : "ai"}">${esc(m.text)}${m.changes && m.changes.length ? `<ul>${m.changes.map(c => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}${m.touched ? `<span class="tag">${esc(m.touched)}</span>` : ""}</div>`).join("");
+  $("#msgs").scrollTop = 1e9;
+}
+async function ask(text){
+  if (!text.trim()) return;
+  chat.push({role:"user", text}); renderChat();
+  $("#q").value = ""; $("#send").disabled = true; $("#typing").hidden = false;
+  try {
+    const r = await fetch("/api/ai", {method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({jobId, message: `[She is looking at the ${docTab === "resume" ? "RESUME" : "COVER LETTER"} tab] ${text}`, resumeDoc, coverLetter: letter, history: chat.filter(m => m.role !== "err").map(m => ({role: m.role, text: m.text}))})}).then(r => r.json());
+    if (r.error) throw new Error(r.error);
+    const touched = [];
+    if (r.resumeDoc || r.coverLetter) pushUndo();
+    if (r.resumeDoc){ resumeDoc = r.resumeDoc; touched.push("resume updated"); }
+    if (r.coverLetter){ letter = r.coverLetter; touched.push("cover letter updated"); }
+    chat.push({role:"ai", text: r.reply || "Done.", changes: r.changes, touched: touched.join(" · ")});
+    if (r.coverLetter && !r.resumeDoc && docTab !== "letter") setTab("letter");
+    else if (r.resumeDoc && !r.coverLetter && docTab !== "resume") setTab("resume");
+    else draw();
+    save();
+  } catch(err){
+    chat.push({role:"err", text: "Something went wrong: " + err.message});
+  }
+  $("#send").disabled = false; $("#typing").hidden = true; renderChat();
+}
+$("#ask").addEventListener("submit", e => { e.preventDefault(); ask($("#q").value); });
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); ask($("#q").value); } });
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("chip")) ask(e.target.textContent);
+  const tab = e.target.closest(".seg button"); if (tab) setTab(tab.dataset.doc);
+});
+</script>
+</body>
+</html>

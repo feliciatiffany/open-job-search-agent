@@ -1,0 +1,55 @@
+{
+ "188374c08dc4": {
+  "id": "188374c08dc4",
+  "score": 5,
+  "verdict": "Strong new-grad product fit",
+  "why": "New-grad product designer role centered on research and prototyping, matching Pantry and the Northwind internship.",
+  "flags": [
+   "portfolio review round"
+  ],
+  "grad": "",
+  "sponsorship": "",
+  "checked": "2026-11-08",
+  "loaded": true
+ },
+ "7e8994fd2140": {
+  "id": "7e8994fd2140",
+  "score": 4,
+  "verdict": "Good design-engineer fit",
+  "why": "Wants a designer who codes in React; Neighborhood Archive and the Pantry prototype show that, though it asks for some production experience.",
+  "flags": [
+   "1 year preferred"
+  ],
+  "grad": "",
+  "sponsorship": "",
+  "checked": "2026-11-08",
+  "loaded": true
+ },
+ "f8cdfe155e3c": {
+  "id": "f8cdfe155e3c",
+  "score": 3,
+  "verdict": "Fits, but OPT only",
+  "why": "Good growth-design role, but the posting says it can't sponsor H-1B, so it only works on OPT.",
+  "flags": [
+   "no H-1B sponsorship"
+  ],
+  "grad": "",
+  "sponsorship": "",
+  "checked": "2026-11-08",
+  "loaded": true
+ },
+ "d9b3b1621bc8": {
+  "id": "d9b3b1621bc8",
+  "score": 2,
+  "verdict": "Really a software role",
+  "why": "Mostly TypeScript platform engineering with little design work.",
+  "flags": [
+   "software engineering",
+   "2+ years"
+  ],
+  "grad": "",
+  "sponsorship": "",
+  "checked": "2026-11-08",
+  "loaded": true
+ }
+}

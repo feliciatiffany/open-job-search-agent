@@ -1,0 +1,30 @@
+{
+ "_note": "Everything personal the app needs, in one place. This is a made-up sample candidate: replace it with your own.",
+ "app_title": "Open Job Search Agent",
+ "name": "Alex Rivera",
+ "short_name": "Alex",
+ "email": "alex.rivera@example.com",
+ "my_addresses": ["alex.rivera@example.com", "arivera@student.example.edu"],
+ "signoff": "Best,\nAlex",
+ "graduation": "May 2027",
+ "needs_sponsorship": true,
+ "email_start_date": "2026-11-01",
+ "alumni_searches": [
+  {"label": "Hudson College alumni", "linkedin_school": "hudson-college-of-art-and-design-example"}
+ ],
+ "community_search": {"label": "Filipino community", "keyword": "Philippines"},
+ "school_alternates": ["Hudson College of Art and Design", "Hudson College", "Hudson"],
+ "major_alternates": ["Interaction Design", "Design and Technology", "Design", "Fine Arts"],
+ "lead_with": {
+  "Product / UI-UX design": "Pantry (food-sharing app, Figma + React) · Transit Lens (wayfinding research) · Campus Housing redesign",
+  "Frontend / design engineer": "Neighborhood Archive (Eleventy + JS) · Pantry React prototype · design-system tokens",
+  "Creative technology": "Loom Lab (p5.js generative textile install) · Echo Garden (Arduino + sound)",
+  "Visual / brand design": "Northwind Studio brand refresh · Riso zine series"
+ },
+ "swaps": {
+  "Frontend / design engineer": "Move React, JavaScript and Eleventy to the front of the skills line.",
+  "Product / UI-UX design": "Keep Pantry and Transit Lens at the top; lead with the usability-testing numbers.",
+  "Creative technology": "If the role is screen-based, swap Echo Garden for Pantry.",
+  "Visual / brand design": "Lead with the Northwind Studio internship and the zine series."
+ }
+}
